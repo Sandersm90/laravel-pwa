@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaravelPWA\Console\Commands;
 
 use File;
@@ -38,10 +40,10 @@ class DeployManifest extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): mixed
     {
 
-        $output = (new ManifestService)->generate();
+        $output = (new ManifestService())->generate();
         File::put(public_path("manifest.json"), json_encode($output, JSON_PRETTY_PRINT));
 
         $this->line('manifest.json file has been created.');
