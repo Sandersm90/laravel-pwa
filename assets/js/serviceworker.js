@@ -16,12 +16,15 @@ var filesToCache = [
 // Cache on install
 self.addEventListener("install", event => {
     this.skipWaiting();
-    event.waitUntil(
-        caches.open(staticCacheName)
-            .then(cache => {
-                return cache.addAll(filesToCache);
-            })
-    )
+    const filesUpdate = cache => {
+        const stack = [];
+        filesToCache.forEach(file => stack.push(
+            cache.add(file).catch(_=>console.error(`can't load ${file} to cache`))
+        ));
+        return Promise.all(stack);
+    };
+
+    event.waitUntil(caches.open(staticCacheName).then(filesUpdate));
 });
 
 // Clear cache on activate
